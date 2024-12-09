@@ -44,7 +44,6 @@ async function authorizedFetch(url, options = {}) {
     return response;
 }
 
-// Загрузка автомобилей
 async function loadCars() {
     const response = await authorizedFetch(`${API_BASE}/get_cars/`);
 
@@ -54,20 +53,19 @@ async function loadCars() {
     }
 
     const data = await response.json();
-    console.log("Response data:", data); // Логируем ответ от сервера
 
-    // Проверяем, что данные существуют и cars - это массив
     if (data && Array.isArray(data.cars)) {
         const cars = data.cars;
 
         if (cars.length === 0) {
-            // Если список автомобилей пустой
             carsList.innerHTML = "<li>Нет доступных автомобилей</li>";
         } else {
-            // Если автомобили есть, то отображаем их
-            carsList.innerHTML = ""; // Очистка списка
+            carsList.innerHTML = "";
             cars.forEach(car => {
                 const li = document.createElement("li");
+                li.setAttribute("data-make", car.make);
+                li.setAttribute("data-model", car.model);
+                li.setAttribute("data-license", car.license_plate);
                 li.innerHTML = `
                     <strong>${car.make} ${car.model}</strong>
                     <button class="expand">Данные</button>
@@ -81,25 +79,22 @@ async function loadCars() {
                 `;
                 carsList.appendChild(li);
 
-                // Обработчик кнопки "Данные"
                 li.querySelector(".expand").addEventListener("click", () => {
                     const details = li.querySelector(".car-details");
                     details.classList.toggle("hidden");
                 });
 
-                // Обработчик кнопки "Добавить регистрацию"
                 li.querySelector(".green").addEventListener("click", () => {
                     window.location.href = `/regdb/add_registration.html?license_plate=${car.license_plate}`;
                 });
 
-                // Обработчик кнопки "Удалить"
                 li.querySelector(".delete").addEventListener("click", async () => {
                     if (confirm("Удалить автомобиль?")) {
                         const deleteResponse = await authorizedFetch(`${API_BASE}/delete_car/${car.license_plate}`, {
                             method: "DELETE"
                         });
                         if (deleteResponse && deleteResponse.ok) {
-                            loadCars(); // Перезагрузка списка
+                            loadCars();
                         }
                     }
                 });
@@ -112,10 +107,10 @@ async function loadCars() {
 }
 
 addCarButton.addEventListener("click", () => {
-    addCarForm.classList.toggle("hidden"); // Показываем или скрываем форму
+    addCarForm.classList.toggle("hidden");
 });
 
-// Добавление нового автомобиля
+
 submitAddCar.addEventListener("click", async () => {
     const make = document.getElementById("newCarMake").value;
     const model = document.getElementById("newCarModel").value;
@@ -129,7 +124,7 @@ submitAddCar.addEventListener("click", async () => {
 
         if (response) {
             addCarForm.classList.add("hidden");
-            loadCars(); // Перезагрузка списка
+            loadCars();
         } else {
             alert("Ошибка добавления автомобиля.");
         }
@@ -138,15 +133,37 @@ submitAddCar.addEventListener("click", async () => {
     }
 });
 
-// Поиск автомобилей
+
 searchCarButton.addEventListener("click", () => {
     const query = searchCarInput.value.toLowerCase();
     const cars = document.querySelectorAll("li");
+    let found = false;
+
+    const noResultsMessage = document.querySelector(".no-results");
+    if (noResultsMessage) {
+        noResultsMessage.remove();
+    }
     cars.forEach(car => {
-        const licensePlate = car.querySelector("strong").textContent.toLowerCase();
-        car.style.display = licensePlate.includes(query) ? "" : "none";
+        const make = car.getAttribute("data-make") || "";
+        const model = car.getAttribute("data-model") || "";
+        const licensePlate = car.getAttribute("data-license") || "";
+
+        if (make.toLowerCase().includes(query) || model.toLowerCase().includes(query) || licensePlate.toLowerCase().includes(query)) {
+            car.style.display = "";
+            found = true;
+        } else {
+            car.style.display = "none";
+        }
     });
+
+    if (!found && query != "") {
+        if (!document.querySelector(".no-results")) {
+            const noResultsMessage = document.createElement("li");
+            noResultsMessage.classList.add("no-results");
+            noResultsMessage.textContent = "Автомобили не найдены.";
+            carsList.appendChild(noResultsMessage);
+        }
+    }
 });
 
-// Инициализация
 loadCars();

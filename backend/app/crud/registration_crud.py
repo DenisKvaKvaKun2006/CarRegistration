@@ -25,6 +25,7 @@ def delete_registration_by_license_plate(license_plate: str):
         result = registration_collection.delete_one({"license_plate": license_plate})
         if result.deleted_count == 0:
             print("No registration found with the given license plate.")
+        return result
     except Exception as e:
         print(f"Error deleting registration: {e}")
         raise

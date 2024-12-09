@@ -1,3 +1,4 @@
+/* Общие стили */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -14,6 +15,7 @@ main {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Поисковая панель */
 .search-container {
     display: flex;
     gap: 10px;
@@ -28,6 +30,7 @@ input[type="text"] {
     background-color: #e9ecef;
 }
 
+/* Общие стили кнопок */
 button {
     padding: 0.5rem 1rem;
     background-color: #007BFF;
@@ -43,6 +46,41 @@ button:hover {
     background-color: #0056b3;
 }
 
+button.add-reg,
+button.hide-reg,
+button.find-reg {
+    background-color: #28a745; /* Зеленый */
+}
+
+button.add-reg:hover,
+button.hide-reg:hover,
+button.find-reg:hover {
+    background-color: #218838; /* Темно-зеленый */
+}
+
+button.delete {
+    background-color: #dc3545;
+}
+
+button.delete:hover {
+    background-color: #c82333;
+}
+
+button.expand {
+    background-color: #007BFF;  /* Синий */
+    color: white;
+}
+
+button.expand:hover {
+    background-color: #0056b3;  /* Темно-синий */
+}
+
+/* Скрытый элемент */
+.hidden {
+    display: none !important;
+}
+
+/* Форма добавления автомобиля */
 #addCarForm {
     margin: 1rem 0;
     display: flex;
@@ -54,6 +92,7 @@ button:hover {
     display: none;
 }
 
+/* Список автомобилей */
 ul {
     list-style: none;
     padding: 0;
@@ -71,27 +110,6 @@ li {
     gap: 10px;
 }
 
-li button {
-    margin-left: 10px;
-    background-color: #6c757d;
-}
-
-li button.expand {
-    background-color: #007BFF;
-}
-
-li button.green {
-    background-color: #28a745;
-}
-
-li button.delete {
-    background-color: #dc3545;
-}
-
-li button:hover {
-    opacity: 0.85;
-}
-
 .car-details {
     padding: 0.5rem;
     background-color: #e9ecef;
@@ -100,4 +118,39 @@ li button:hover {
 
 .car-details.hidden {
     display: none;
+}
+
+/* Результаты регистрации */
+.reg-result {
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+}
+
+.reg-result.hidden {
+    display: none;
+}
+
+button.add-reg {
+    margin-top: 10px;
+}
+
+button.hide-reg {
+    margin-top: 5px;
+    background-color: #6c757d; /* Серый */
+    color: white;
+}
+
+button.hide-reg:hover {
+    background-color: #5a6268; /* Темно-серый */
+}
+
+/* Сообщения */
+.no-results {
+    font-size: 1rem;
+    color: #dc3545;
+    margin-top: 1rem;
+    text-align: center;
 }

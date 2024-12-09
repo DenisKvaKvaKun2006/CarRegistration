@@ -1,40 +1,103 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Светло-серый фон */
 }
 
 main {
-    max-width: 400px;
-    margin: 5rem auto;
     padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff; /* Белый фон для контраста */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-form {
+.search-container {
     display: flex;
-    flex-direction: column;
-}
-
-form label {
-    margin: 0.5rem 0;
-}
-
-form input {
-    padding: 0.5rem;
+    gap: 10px;
     margin-bottom: 1rem;
 }
 
-form button {
+input[type="text"], input[type="number"] {
     padding: 0.5rem;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    flex: 1;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #e9ecef;
 }
 
-form button:hover {
-    background-color: #0056b3;
+button {
+    padding: 0.5rem 1rem;
+    background-color: #007BFF; /* Синий для акцента */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* Темный синий для эффекта наведения */
+}
+
+#addRegForm {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#addRegForm.hidden {
+    display: none;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background-color: #f8f9fa; /* Фон для регистрации */
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+li button {
+    margin-left: 10px;
+    background-color: #6c757d; /* Нейтральный серый */
+}
+
+li button.expand {
+    background-color: #007BFF; /* Синий */
+}
+
+li button.green {
+    background-color: #28a745; /* Зеленый для поиска автомобиля */
+}
+
+li button.delete {
+    background-color: #dc3545; /* Красный для удаления */
+}
+
+li button:hover {
+    opacity: 0.85;
+}
+
+.reg-details {
+    padding: 0.5rem;
+    background-color: #e9ecef; /* Легкий серый для контраста */
+    border-radius: 6px;
+}
+
+.reg-details.hidden {
+    display: none;
 }

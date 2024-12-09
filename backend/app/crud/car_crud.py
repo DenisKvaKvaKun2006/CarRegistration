@@ -16,8 +16,7 @@ def delete_car_by_license_plate(license_plate: str):
         result = car_collection.delete_one({"license_plate": license_plate})
         if result.deleted_count == 0:
             print("No car found with the given license plate.")
-        else:
-            return result
+        return result
     except Exception as e:
         print(f"Error deleting car: {e}")
         raise

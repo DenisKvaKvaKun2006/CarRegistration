@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База регистраций</title>
+    <link rel="stylesheet" href="/static/css/registration.css">
+</head>
+<body>
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchRegInput" placeholder="Поиск регистрации...">
+            <button id="searchRegButton">Найти</button>
+        </div>
+
+        <button id="addRegButton">Добавить регистрацию</button>
+        <div id="addRegForm" class="hidden">
+            <input type="text" id="newRegLicensePlate" placeholder="Номер автомобиля">
+            <input type="text" id="newOwnerName" placeholder="Имя владельца">
+            <input type="text" id="newOwnerAddress" placeholder="Адрес владельца">
+            <input type="number" id="newYearOfManufacture" placeholder="Год выпуска">
+            <button id="submitAddReg">Добавить</button>
+        </div>
+
+        <ul id="regList"></ul>
+    </main>
+
+    <script src="/static/js/header.js"></script>
+    <script src="/static/js/registration.js"></script>
+</body>
+</html>

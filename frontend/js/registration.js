@@ -5,18 +5,18 @@ const submitAddReg = document.getElementById("submitAddReg");
 const searchRegInput = document.getElementById("searchRegInput");
 const searchRegButton = document.getElementById("searchRegButton");
 
-const API_BASE = "/regdb"; // Базовый путь API
+const API_BASE = "/regdb";
 
-// Получение токена из localStorage
+
 const AUTH_TOKEN = localStorage.getItem("token");
 
-// Проверка авторизации
+
 if (!AUTH_TOKEN) {
     alert("Вы не авторизованы. Перейдите на страницу входа.");
     window.location.href = "/static/html/login.html";
 }
 
-// Утилита для выполнения авторизованных запросов
+
 async function authorizedFetch(url, options = {}) {
     options.headers = {
         ...options.headers,
@@ -26,14 +26,14 @@ async function authorizedFetch(url, options = {}) {
 
     const response = await fetch(url, options);
 
-    // Проверка статуса 401 (неавторизован)
+
     if (response.status === 401) {
         alert("Сессия истекла. Пожалуйста, войдите снова.");
         window.location.href = "/static/html/login.html";
         return null;
     }
 
-    // Дополнительная обработка других статусов ошибок
+
     if (!response.ok) {
         const errorData = await response.json();
         console.error("Ошибка запроса:", errorData.detail);
@@ -44,7 +44,7 @@ async function authorizedFetch(url, options = {}) {
     return response;
 }
 
-// Загрузка регистраций
+
 async function loadRegs() {
     const response = await authorizedFetch(`${API_BASE}/get_registrations/`);
 
@@ -82,13 +82,13 @@ async function loadRegs() {
                 `;
                 regList.appendChild(li);
 
-                // Обработчик кнопки "Данные"
+
                 li.querySelector(".expand").addEventListener("click", () => {
                     const details = li.querySelector(".reg-details");
                     details.classList.toggle("hidden");
                 });
 
-                // Обработчик кнопки "Найти автомобиль"
+
                 li.querySelector(".green").addEventListener("click", async () => {
                     const licensePlate = reg.license_plate;
                     const carResponse = await authorizedFetch(`/carsdb/get_cars/`);
@@ -102,7 +102,7 @@ async function loadRegs() {
                     }
                 });
 
-                // Обработчик кнопки "Удалить"
+
                 li.querySelector(".delete").addEventListener("click", async () => {
                     if (confirm("Удалить регистрацию?")) {
                         const deleteResponse = await authorizedFetch(`${API_BASE}/delete_registration/${reg.license_plate}`, {

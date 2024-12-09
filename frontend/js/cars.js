@@ -80,13 +80,13 @@ async function loadCars() {
                 `;
                 carsList.appendChild(li);
 
-                // Кнопка для отображения/скрытия данных
+
                 li.querySelector(".expand").addEventListener("click", () => {
                     const details = li.querySelector(".car-details");
                     details.classList.toggle("hidden");
                 });
 
-                // Кнопка "Найти регистрацию"
+
                 li.querySelector(".find-reg").addEventListener("click", async () => {
                     const licensePlate = car.license_plate;
                     const regResultDiv = li.querySelector(".reg-result");
@@ -94,7 +94,7 @@ async function loadCars() {
                     const addRegButton = regResultDiv.querySelector(".add-reg");
                     const hideRegButton = regResultDiv.querySelector(".hide-reg");
 
-                    // Очистка предыдущих результатов
+
                     regInfoParagraph.textContent = "";
                     addRegButton.classList.add("hidden");
                     hideRegButton.classList.remove("hidden");
@@ -128,7 +128,7 @@ async function loadCars() {
 
                     regResultDiv.classList.remove("hidden");
 
-                    // Обработчик кнопки "Добавить регистрацию"
+
                     addRegButton.addEventListener("click", () => {
                         window.location.href = `/regdb/add_registration.html?license_plate=${licensePlate}`;
                     });
@@ -139,7 +139,7 @@ async function loadCars() {
                     });
                 });
 
-                // Кнопка для удаления автомобиля
+
                 li.querySelector(".delete").addEventListener("click", async () => {
                     if (confirm("Удалить автомобиль?")) {
                         const deleteResponse = await authorizedFetch(`${API_BASE}/delete_car/${car.license_plate}`, {

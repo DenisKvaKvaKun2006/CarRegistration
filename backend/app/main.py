@@ -3,7 +3,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from routes import car_routes, registration_routes, auth_routes
-from database import users_collection
 import os
 
 app = FastAPI()

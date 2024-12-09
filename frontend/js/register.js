@@ -1,7 +1,6 @@
 document.getElementById("registration-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Сбор данных с формы
     const firstName = document.getElementById("first_name").value;
     const lastName = document.getElementById("last_name").value;
     const email = document.getElementById("email").value;
@@ -28,7 +27,7 @@ document.getElementById("registration-form").addEventListener("submit", async (e
 
         if (response.ok) {
             alert("Registration successful! Please login.");
-            window.location.href = "login.html"; // Перенаправление на страницу логина
+            window.location.href = "/static/html/login.html";
         } else {
             const data = await response.json();
             alert(data.detail || "Registration failed.");

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Registration System</title>
+    <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Car Registration System</h1>
+
+        <!-- Form for adding a car -->
+        <div class="form-section">
+            <h2>Add Car</h2>
+            <form id="addCarForm">
+                <label for="make">Make:</label>
+                <input type="text" id="make" name="make" required>
+                <label for="model">Model:</label>
+                <input type="text" id="model" name="model" required>
+                <label for="license_plate">License Plate:</label>
+                <input type="text" id="license_plate" name="license_plate" required>
+                <button type="submit">Add Car</button>
+            </form>
+        </div>
+
+        <!-- Display list of cars -->
+        <div class="list-section">
+            <h2>Cars List</h2>
+            <ul id="carList"></ul>
+        </div>
+
+        <!-- Form for adding registration -->
+        <div class="form-section" id="registrationFormSection" style="display: none;">
+            <h2>Add Registration</h2>
+            <form id="addRegistrationForm">
+                <label for="reg_license_plate">License Plate:</label>
+                <input type="text" id="reg_license_plate" name="license_plate" required disabled>
+                <label for="owner_name">Owner Name:</label>
+                <input type="text" id="owner_name" name="owner_name" required>
+                <label for="owner_address">Owner Address:</label>
+                <input type="text" id="owner_address" name="owner_address" required>
+                <label for="year_of_manufacture">Year of Manufacture:</label>
+                <input type="number" id="year_of_manufacture" name="year_of_manufacture" required>
+                <button type="submit">Add Registration</button>
+                <button type="button" id="cancelRegistration" style="margin-left: 10px;">Cancel</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="static/js/index.js"></script>
+</body>
+</html>

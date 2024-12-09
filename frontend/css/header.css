@@ -1,0 +1,62 @@
+header {
+    background-color: #007BFF;
+    padding: 1rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+nav .auth-buttons {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+#login-button, #register-button {
+    padding: 0.5rem 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 10px;
+}
+
+#login-button:hover, #register-button:hover {
+    background-color: #218838;
+}
+
+#logout-button {
+    padding: 0.5rem 1rem;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+#logout-button:hover {
+    background-color: #cc0000;
+}

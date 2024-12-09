@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База автомобилей</title>
+    <link rel="stylesheet" href="/static/css/cars.css">
+</head>
+<body>
+    <main>
+        <div class="search-container">
+            <input type="text" id="searchCarInput" placeholder="Поиск автомобиля...">
+            <button id="searchCarButton">Найти</button>
+        </div>
+
+        <button id="addCarButton">Добавить автомобиль</button>
+        <div id="addCarForm" class="hidden">
+            <input type="text" id="newCarMake" placeholder="Марка автомобиля">
+            <input type="text" id="newCarModel" placeholder="Модель автомобиля">
+            <input type="text" id="newCarLicensePlate" placeholder="Номер автомобиля">
+            <button id="submitAddCar">Добавить</button>
+        </div>
+
+        <ul id="carsList"></ul>
+    </main>
+
+    <script src="/static/js/cars.js"></script>
+    <script src="/static/js/header.js"></script>
+</body>
+</html>

@@ -267,6 +267,7 @@ function showEditRegForm(reg) {
     const editOwnerName = document.getElementById("editOwnerName");
     const editOwnerAddress = document.getElementById("editOwnerAddress");
     const editYearOfManufacture = document.getElementById("editYearOfManufacture");
+    const submitEditReg = document.getElementById("submitEditReg");
 
     editRegLicensePlate.value = reg.license_plate;
     editOwnerName.value = reg.owner_name;
@@ -288,40 +289,6 @@ function showEditRegForm(reg) {
     editYearOfManufacture.addEventListener("input", (e) => {
         const isValid = yearRegex.test(e.target.value.trim()) && e.target.value >= 1900 && e.target.value <= new Date().getFullYear();
         setFieldValidationStyle(e.target, isValid);
-    });
-
-    document.getElementById("submitEditReg").addEventListener("click", async () => {
-        const updatedRegData = {
-            owner_name: editOwnerName.value.trim(),
-            owner_address: editOwnerAddress.value.trim(),
-            year_of_manufacture: parseInt(editYearOfManufacture.value, 10),
-        };
-
-        const isOwnerNameValid = ownerNameRegex.test(updatedRegData.owner_name);
-        const isOwnerAddressValid = ownerAddressRegex.test(updatedRegData.owner_address);
-        const isYearValid = yearRegex.test(updatedRegData.year_of_manufacture) && updatedRegData.year_of_manufacture >= 1900 && updatedRegData.year_of_manufacture <= new Date().getFullYear();
-
-        setFieldValidationStyle(editOwnerName, isOwnerNameValid);
-        setFieldValidationStyle(editOwnerAddress, isOwnerAddressValid);
-        setFieldValidationStyle(editYearOfManufacture, isYearValid);
-
-        if (!isOwnerNameValid || !isOwnerAddressValid || !isYearValid) {
-            alert("Пожалуйста, исправьте ошибки перед сохранением.");
-            return;
-        }
-
-        const response = await authorizedFetch(`${API_BASE}/update_registration/${reg.license_plate}`, {
-            method: "PUT",
-            body: JSON.stringify(updatedRegData),
-        });
-
-        if (response && response.ok) {
-            alert("Данные регистрации успешно обновлены.");
-            editRegForm.classList.add("hidden");
-            loadRegs();
-        } else {
-            alert("Ошибка при обновлении данных.");
-        }
     });
 
     document.getElementById("cancelEditReg").addEventListener("click", () => {
@@ -347,6 +314,51 @@ document.getElementById("newOwnerAddress").addEventListener("input", (e) => {
 document.getElementById("newYearOfManufacture").addEventListener("input", (e) => {
     const isValid = yearRegex.test(e.target.value.trim()) && e.target.value >= 1900 && e.target.value <= new Date().getFullYear();
     setFieldValidationStyle(e.target, isValid);
+});
+
+document.getElementById("submitEditReg").addEventListener("click", async () => {
+    const editRegLicensePlate = document.getElementById("editRegLicensePlate");
+    const editOwnerName = document.getElementById("editOwnerName");
+    const editOwnerAddress = document.getElementById("editOwnerAddress");
+    const editYearOfManufacture = document.getElementById("editYearOfManufacture");
+
+    const licensePlate = editRegLicensePlate.value.trim();
+    const ownerName = editOwnerName.value.trim();
+    const ownerAddress = editOwnerAddress.value.trim();
+    const year = editYearOfManufacture.value.trim();
+
+    const isLicensePlateValid = licensePlateRegex.test(licensePlate);
+    const isOwnerNameValid = ownerNameRegex.test(ownerName);
+    const isOwnerAddressValid = ownerAddressRegex.test(ownerAddress);
+    const isYearValid = yearRegex.test(year) && year >= 1900 && year <= new Date().getFullYear();
+
+    setFieldValidationStyle(editRegLicensePlate, isLicensePlateValid);
+    setFieldValidationStyle(editOwnerName, isOwnerNameValid);
+    setFieldValidationStyle(editOwnerAddress, isOwnerAddressValid);
+    setFieldValidationStyle(editYearOfManufacture, isYearValid);
+
+    if (!isLicensePlateValid || !isOwnerNameValid || !isOwnerAddressValid || !isYearValid) {
+        alert("Пожалуйста, исправьте ошибки в форме перед редактированием регистрации.");
+        return;
+    }
+
+    const updatedReg = {
+        owner_name: ownerName,
+        owner_address: ownerAddress,
+        year_of_manufacture: parseInt(year, 10),
+    };
+
+    const response = await authorizedFetch(`${API_BASE}/update_registration/${licensePlate}`, {
+        method: "PUT",
+        body: JSON.stringify(updatedReg),
+    });
+
+    if (response) {
+        document.getElementById("editRegForm").classList.add("hidden");
+        loadRegs();
+    } else {
+        alert("Ошибка редактирования регистрации.");
+    }
 });
 
 loadRegs();

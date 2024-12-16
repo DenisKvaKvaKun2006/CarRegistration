@@ -95,7 +95,6 @@ async function loadRegs() {
                     <div class="button-row">
                         <button class="expand">Данные</button>
                         <button class="edit-reg">Редактировать</button>
-                        <button class="find-car">Найти автомобиль</button>
                         <button class="delete">Удалить</button>
                     </div>
                     <div class="reg-details hidden">
@@ -113,48 +112,34 @@ async function loadRegs() {
 
                 li.querySelector(".edit-reg").addEventListener("click", () => showEditRegForm(reg));
 
-                li.querySelector(".find-car").addEventListener("click", async () => {
-                    const licensePlate = reg.license_plate;
-                    const carResultDiv = li.querySelector(".car-result");
-                    const carInfoParagraph = carResultDiv.querySelector(".car-info");
-                    const hideCarResultButton = carResultDiv.querySelector(".hide-car-result");
 
-                    carInfoParagraph.textContent = "Загрузка...";
-                    hideCarResultButton.classList.add("hidden");
-
-                    const carResponse = await authorizedFetch(`/carsdb/search_cars/?query=${licensePlate}`);
-
-                    carInfoParagraph.textContent = "";
-
-                    if (carResponse) {
-                        const data = await carResponse.json();
-                        const car = data.cars.find(c => c.license_plate === licensePlate);
-
-                        if (car) {
-                            carInfoParagraph.innerHTML = `
-                                <strong>Данные автомобиля:</strong><br>
-                                Марка: ${car.make}<br>
-                                Модель: ${car.model}<br>
-                                Номер: ${car.license_plate}
-                            `;
-                        } else {
-                            carInfoParagraph.textContent = "Автомобиль с таким номером не найден.";
-                        }
-                    } else {
-                        carInfoParagraph.textContent = "Ошибка при загрузке данных об автомобиле.";
-                    }
-
-                    carResultDiv.classList.remove("hidden");
-
-                    hideCarResultButton.classList.remove("hidden");
-                    hideCarResultButton.addEventListener("click", () => {
-                        carResultDiv.classList.add("hidden");
-                    });
-                });
-
-                li.querySelector(".expand").addEventListener("click", () => {
+                li.querySelector(".expand").addEventListener("click", async () => {
                     const details = li.querySelector(".reg-details");
                     details.classList.toggle("hidden");
+
+                    if (!details.classList.contains("hidden")) {
+                        const licensePlate = reg.license_plate;
+
+                        const carResponse = await authorizedFetch(`/carsdb/search_cars/?query=${licensePlate}`);
+
+                        if (carResponse) {
+                            const data = await carResponse.json();
+                            const car = data.cars.find(c => c.license_plate === licensePlate);
+
+                            if (car) {
+                                details.innerHTML += `
+                                <p><strong>Данные автомобиля:</strong></p>
+                                <p>Марка: <strong>${car.make}</strong></p>
+                                <p>Модель: <strong>${car.model}</strong></p>
+                                <p>Номер: <strong>${car.license_plate}</strong></p>
+                                `;
+                            } else {
+                                details.innerHTML += "<p>Информация об автомобиле не найдена.</p>";
+                            }
+                        } else {
+                            details.innerHTML += "<p>Ошибка при попытке загрузить данные об автомобиле.</p>";
+                        }
+                    }
                 });
 
 
@@ -218,9 +203,10 @@ submitAddReg.addEventListener("click", async () => {
     } else {
         alert("Ошибка добавления регистрации.");
     }
+    window.location.href = "/static/html/registration.html";
 });
 
-searchRegButton.addEventListener("click", () => {
+searchRegButton.addEventListener("click", async () => {
     const query = searchRegInput.value.toLowerCase();
     const regs = document.querySelectorAll("li");
     let found = false;
@@ -229,25 +215,53 @@ searchRegButton.addEventListener("click", () => {
     if (noResultsMessage) {
         noResultsMessage.remove();
     }
-    regs.forEach(reg => {
-        const licensePlate = reg.getAttribute("data-license") || "";
-        const OwnerName = reg.getAttribute("data-owner_name") || "";
-        const OwnerAddress = reg.getAttribute("data-owner_address") || "";
-        const Year = reg.getAttribute("data-year") || "";
 
-        if (licensePlate.toLowerCase().includes(query) || OwnerName.toLowerCase().includes(query) || OwnerAddress.toLowerCase().includes(query) || Year.toLowerCase().includes(query)) {
+    regs.forEach(reg => {
+        reg.style.display = "none";
+    });
+
+    regs.forEach(reg => {
+        const licensePlate = reg.getAttribute("data-license_plate") || "";
+        const ownerName = reg.getAttribute("data-owner_name") || "";
+        const ownerAddress = reg.getAttribute("data-owner_address") || "";
+        const year = reg.getAttribute("data-year") || "";
+
+        if (
+            licensePlate.toLowerCase().includes(query) ||
+            ownerName.toLowerCase().includes(query) ||
+            ownerAddress.toLowerCase().includes(query) ||
+            year.toLowerCase().includes(query)
+        ) {
             reg.style.display = "";
             found = true;
-        } else {
-            reg.style.display = "none";
         }
     });
 
     if (!found && query !== "") {
+        const carSearchResponse = await authorizedFetch(`/carsdb/search_cars/?query=${query}`);
+
+        if (carSearchResponse) {
+            const data = await carSearchResponse.json();
+            const cars = data.cars;
+
+            cars.forEach(car => {
+                regs.forEach(reg => {
+                    const licensePlate = reg.getAttribute("data-license_plate") || "";
+
+                    if (licensePlate.toLowerCase() === car.license_plate.toLowerCase()) {
+                        reg.style.display = "";
+                        found = true;
+                    }
+                });
+            });
+        }
+    }
+
+    if (!found) {
         if (!document.querySelector(".no-results")) {
             const noResultsMessage = document.createElement("li");
             noResultsMessage.classList.add("no-results");
-            noResultsMessage.textContent = "Регистрации не найдены.";
+            noResultsMessage.textContent = "Ничего не найдено.";
             regList.appendChild(noResultsMessage);
         }
     }

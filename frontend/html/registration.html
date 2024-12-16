@@ -14,18 +14,66 @@
         </div>
 
         <div id="addRegForm" class="hidden">
-            <input type="text" id="newRegLicensePlate" placeholder="Номер автомобиля">
-            <input type="text" id="newOwnerName" placeholder="Имя владельца">
-            <input type="text" id="newOwnerAddress" placeholder="Адрес владельца">
-            <input type="number" id="newYearOfManufacture" placeholder="Год выпуска">
+            <input
+                type="text"
+                id="newRegLicensePlate"
+                placeholder="Номер автомобиля"
+                title="Формат: А777АА777"
+                pattern="[А-ЯЁA-Z]{1}[0-9]{3}[А-ЯЁA-Z]{2}[0-9]{2,3}"
+                readonly>
+            <input
+                type="text"
+                id="newOwnerName"
+                placeholder="Имя владельца"
+                title="Только буквы, пробелы и дефисы. Например: Иван Иванов"
+                pattern="[A-Za-zА-ЯЁа-яё\s-]{1,50}"
+                required>
+            <input
+                type="text"
+                id="newOwnerAddress"
+                placeholder="Адрес владельца"
+                title="Адрес может содержать буквы, цифры, пробелы, запятые и точки"
+                pattern="[A-Za-zА-ЯЁа-яё0-9\s.,-]+"
+                required>
+            <input
+                type="number"
+                id="newYearOfManufacture"
+                placeholder="Год выпуска"
+                title="Введите год в диапазоне от 1900 до текущего"
+                min="1900"
+                max="2024"
+                required>
             <button id="submitAddReg">Добавить</button>
         </div>
         <div id="editRegForm" class="hidden">
             <h3>Редактировать регистрацию</h3>
-            <input type="text" id="editRegLicensePlate" placeholder="Номер автомобиля" readonly>
-            <input type="text" id="editOwnerName" placeholder="Имя владельца">
-            <input type="text" id="editOwnerAddress" placeholder="Адрес владельца">
-            <input type="number" id="editYearOfManufacture" placeholder="Год выпуска">
+            <input
+                type="text"
+                id="editRegLicensePlate"
+                placeholder="Номер автомобиля"
+                readonly>
+            <input
+                type="text"
+                id="editOwnerName"
+                placeholder="Имя владельца"
+                title="Только буквы, пробелы и дефисы. Например: Иван Иванов"
+                pattern="[A-Za-zА-ЯЁа-яё\s-]{1,50}"
+                required>
+            <input
+                type="text"
+                id="editOwnerAddress"
+                placeholder="Адрес владельца"
+                title="Адрес может содержать буквы, цифры, пробелы, запятые и точки"
+                pattern="[A-Za-zА-ЯЁа-яё0-9\s.,-]+"
+                required>
+            <input
+                type="number"
+                id="editYearOfManufacture"
+                placeholder="Год выпуска"
+                title="Введите год в диапазоне от 1900 до текущего"
+                min="1900"
+                max="2024"
+                required>
             <div class="edit-buttons">
                 <button id="submitEditReg">Сохранить</button>
                 <button id="cancelEditReg">Отмена</button>

@@ -1,6 +1,9 @@
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://mongo:27017")
+# Создание клиента MongoDB
+client: MongoClient = MongoClient("mongodb://mongo:27017")
+
+# Инициализация базы данных и коллекций
 db = client.car_database
 car_collection = db.cars
 registration_collection = db.registrations

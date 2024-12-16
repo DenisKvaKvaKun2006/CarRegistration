@@ -1,19 +1,40 @@
+from typing import Optional
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
-SECRET_KEY = "keykeykey"  # Оставлю это тут))
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY: str = "keykeykey"  # Пусть будет так))
+ALGORITHM: str = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
 
 def create_access_token(data: dict) -> str:
+    """
+    Создание JWT-токена доступа.
+
+    Args:
+        data (dict): Данные, которые нужно закодировать в токен.
+
+    Returns:
+        str: Сформированный JWT-токен.
+    """
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return token
 
 
-def decode_access_token(token: str):
+def decode_access_token(token: str) -> Optional[dict]:
+    """
+    Расшифровка и валидация JWT-токена.
+
+    Args:
+        token (str): Токен доступа, который нужно расшифровать.
+
+    Returns:
+        Optional[dict]: Расшифрованные данные из токена, если токен валиден.
+                        Возвращает None, если в процессе валидации токен оказался невалидным.
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload

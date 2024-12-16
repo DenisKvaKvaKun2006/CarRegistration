@@ -65,17 +65,28 @@ button.delete:hover {
     background-color: #c82333;
 }
 
-button.expand {
+button.expand,
+button.find-reg {
     background-color: #007BFF;
     color: white;
 }
 
-button.expand:hover {
+button.expand:hover,
+button.find-reg:hover {
     background-color: #0056b3;
 }
 
 .hidden {
     display: none !important;
+}
+
+button.edit-car {
+    background-color: #007BFF;
+    color: white;
+}
+
+button.edit-car:hover {
+    background-color: #0056b3;
 }
 
 #addCarForm {
@@ -116,6 +127,27 @@ li {
     display: none;
 }
 
+
+button#submitAddCar,
+button#submitEditCar {
+    background-color: #28a745; /* Зелёный цвет */
+    color: white;
+}
+
+button#submitAddCar:hover,
+button#submitEditCar:hover {
+    background-color: #218838; /* Тёмно-зелёный при наведении */
+}
+
+button#cancelEditCar {
+    background-color: #dc3545; /* Красный цвет */
+    color: white;
+}
+
+button#cancelEditCar:hover {
+    background-color: #c82333; /* Тёмно-красный при наведении */
+}
+
 .reg-result {
     margin-top: 10px;
     background-color: #f8f9fa;
@@ -148,4 +180,32 @@ button.hide-reg:hover {
     color: #dc3545;
     margin-top: 1rem;
     text-align: center;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px; /* Расстояние между кнопками */
+    justify-content: start; /* Выравнивание кнопок в начале строки */
+    margin-top: 10px; /* Расстояние от предыдущего контента */
+}
+
+
+input {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.5rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+
+input[style*="border: 2px solid red"] {
+    border-color: red !important;
+}
+
+input[style*="border: 2px solid green"] {
+    border-color: green !important;
 }

@@ -15,10 +15,55 @@
 
         <button id="addCarButton">Добавить автомобиль</button>
         <div id="addCarForm" class="hidden">
-            <input type="text" id="newCarMake" placeholder="Марка автомобиля">
-            <input type="text" id="newCarModel" placeholder="Модель автомобиля">
-            <input type="text" id="newCarLicensePlate" placeholder="Номер автомобиля">
+            <input
+                type="text"
+                id="newCarMake"
+                placeholder="Марка автомобиля"
+                title="Только буквы, пробелы и дефисы. Например: Toyota"
+                pattern="[A-Za-zА-Яа-яЁё\s-]{1,50}"
+                required>
+            <input
+                type="text"
+                id="newCarModel"
+                placeholder="Модель автомобиля"
+                title="Только буквы, цифры, пробелы и дефисы. Например: Corolla 2023"
+                pattern="[A-Za-zА-Яа-яЁё0-9\s-]{1,50}"
+                required>
+            <input
+                type="text"
+                id="newCarLicensePlate"
+                placeholder="Номер автомобиля"
+                title="Формат: А777АА777"
+                pattern="[А-ЯЁ]{1}\d{3}[А-ЯЁ]{2}\d{2,3}"
+                required>
             <button id="submitAddCar">Добавить</button>
+        </div>
+
+        <div id="editCarForm" class="hidden">
+            <h3>Редактировать автомобиль</h3>
+            <input
+                type="text"
+                id="editCarMake"
+                placeholder="Марка автомобиля"
+                title="Только буквы, пробелы и дефисы. Например: Toyota"
+                pattern="[A-Za-zА-Яа-яЁё\s-]{1,50}"
+                required>
+            <input
+                type="text"
+                id="editCarModel"
+                placeholder="Модель автомобиля"
+                title="Только буквы, цифры, пробелы и дефисы. Например: Corolla 2023"
+                pattern="[A-Za-zА-Яа-яЁё0-9\s-]{1,50}"
+                required>
+            <input
+                type="text"
+                id="editCarLicensePlate"
+                placeholder="Номер автомобиля"
+                title="Формат: А777АА777"
+                pattern="[А-ЯЁ]{1}\d{3}[А-ЯЁ]{2}\d{2,3}"
+                readonly>
+            <button id="submitEditCar">Сохранить</button>
+            <button id="cancelEditCar">Отмена</button>
         </div>
 
         <ul id="carsList"></ul>

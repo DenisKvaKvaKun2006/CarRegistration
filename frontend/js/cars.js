@@ -7,6 +7,10 @@ const searchCarButton = document.getElementById("searchCarButton");
 
 const API_BASE = "/carsdb";
 const API_REGS = "/regdb";
+const makeRegex = /^[A-Za-zА-Яа-яЁё\s-]{1,50}$/;
+const modelRegex = /^[A-Za-zА-Яа-яЁё0-9\s-]{1,50}$/;
+const licensePlateRegex = /^[A-Za-zА-ЯЁ]{1}\d{3}[A-Za-zА-ЯЁ]{2}\d{2,3}$/;
+
 
 const AUTH_TOKEN = localStorage.getItem("token");
 
@@ -63,10 +67,15 @@ async function loadCars() {
                 li.setAttribute("data-model", car.model);
                 li.setAttribute("data-license", car.license_plate);
                 li.innerHTML = `
-                    <strong>${car.make} ${car.model}</strong>
-                    <button class="expand">Данные</button>
-                    <button class="find-reg">Найти регистрацию</button>
-                    <button class="delete">Удалить</button>
+                    <div class="car-info">
+                        <strong>${car.make} ${car.model}</strong> 
+                    </div>
+                    <div class="button-row">
+                        <button class="expand">Данные</button>
+                        <button class="edit-car">Редактировать</button> <!-- Новая кнопка -->
+                        <button class="find-reg">Найти регистрацию</button>
+                        <button class="delete">Удалить</button>
+                    </div>
                     <div class="car-details hidden">
                         <p>Марка: <strong>${car.make}</strong></p>
                         <p>Модель: <strong>${car.model}</strong></p>
@@ -86,6 +95,7 @@ async function loadCars() {
                     details.classList.toggle("hidden");
                 });
 
+                li.querySelector(".edit-car").addEventListener("click", () => showEditCarForm(car));
 
                 li.querySelector(".find-reg").addEventListener("click", async () => {
                     const licensePlate = car.license_plate;
@@ -95,32 +105,28 @@ async function loadCars() {
                     const hideRegButton = regResultDiv.querySelector(".hide-reg");
 
 
-                    regInfoParagraph.textContent = "";
+                    regInfoParagraph.textContent = "Загрузка...";
                     addRegButton.classList.add("hidden");
                     hideRegButton.classList.remove("hidden");
 
-                    const regResponse = await authorizedFetch(`${API_REGS}/get_registrations/`);
+                    const regResponse = await authorizedFetch(`${API_REGS}/search_registrations/?query=${licensePlate}`);
+
+                    regInfoParagraph.textContent = "";
 
                     if (regResponse) {
                         const data = await regResponse.json();
-                        if (data && Array.isArray(data.registrations)) {
-                            const regs = data.registrations;
-                            const registration = regs.find(reg => reg.license_plate === licensePlate);
-
-                            if (registration) {
-                                regInfoParagraph.innerHTML = `
-                                    <strong>Регистрация найдена:</strong><br>
-                                    Номер: ${registration.license_plate}<br>
-                                    Владелец: ${registration.owner_name}<br>
-                                    Адрес владельца: ${registration.owner_address}<br>
-                                    Год выпуска: ${registration.year_of_manufacture}
-                                `;
-                            } else {
-                                regInfoParagraph.textContent = "Регистрация не найдена.";
-                                addRegButton.classList.remove("hidden");
-                            }
+                        if (data && Array.isArray(data.registrations) && data.registrations.length > 0) {
+                            const registration = data.registrations[0];
+                            regInfoParagraph.innerHTML = `
+                                <strong>Регистрация найдена:</strong><br>
+                                Номер: ${registration.license_plate}<br>
+                                Владелец: ${registration.owner_name}<br>
+                                Адрес владельца: ${registration.owner_address}<br>
+                                Год выпуска: ${registration.year_of_manufacture}
+                            `;
                         } else {
-                            regInfoParagraph.textContent = "Ошибка: данные о регистрациях отсутствуют или некорректны.";
+                            regInfoParagraph.textContent = "Регистрация не найдена.";
+                            addRegButton.classList.remove("hidden");
                         }
                     } else {
                         regInfoParagraph.textContent = "Ошибка при поиске регистрации.";
@@ -130,10 +136,10 @@ async function loadCars() {
 
 
                     addRegButton.addEventListener("click", () => {
-                        window.location.href = `/regdb/add_registration.html?license_plate=${licensePlate}`;
+                        const licensePlate = car.license_plate;
+                        window.location.href = `/static/html/registration.html?license_plate=${licensePlate}`;
                     });
 
-                    // Обработчик кнопки "Скрыть"
                     hideRegButton.addEventListener("click", () => {
                         regResultDiv.classList.add("hidden");
                     });
@@ -158,6 +164,28 @@ async function loadCars() {
     }
 }
 
+function setFieldValidationStyle(input, isValid) {
+    if (isValid) {
+        input.style.border = "2px solid green";
+    } else {
+        input.style.border = "2px solid red";
+    }
+}
+
+document.getElementById("newCarMake").addEventListener("input", (event) => {
+    const isValid = makeRegex.test(event.target.value.trim());
+    setFieldValidationStyle(event.target, isValid);
+});
+
+document.getElementById("newCarModel").addEventListener("input", (event) => {
+    const isValid = modelRegex.test(event.target.value.trim());
+    setFieldValidationStyle(event.target, isValid);
+});
+
+document.getElementById("newCarLicensePlate").addEventListener("input", (event) => {
+    const isValid = licensePlateRegex.test(event.target.value.trim());
+    setFieldValidationStyle(event.target, isValid);
+});
 
 addCarButton.addEventListener("click", () => {
     addCarForm.classList.toggle("hidden");
@@ -165,24 +193,37 @@ addCarButton.addEventListener("click", () => {
 
 
 submitAddCar.addEventListener("click", async () => {
-    const make = document.getElementById("newCarMake").value;
-    const model = document.getElementById("newCarModel").value;
-    const licensePlate = document.getElementById("newCarLicensePlate").value;
+    const makeInput = document.getElementById("newCarMake");
+    const modelInput = document.getElementById("newCarModel");
+    const licensePlateInput = document.getElementById("newCarLicensePlate");
 
-    if (make && model && licensePlate) {
-        const response = await authorizedFetch(`${API_BASE}/add_car/`, {
-            method: "POST",
-            body: JSON.stringify({ make, model, license_plate: licensePlate })
-        });
+    const make = makeInput.value.trim();
+    const model = modelInput.value.trim();
+    const licensePlate = licensePlateInput.value.trim();
 
-        if (response) {
-            addCarForm.classList.add("hidden");
-            loadCars();
-        } else {
-            alert("Ошибка добавления автомобиля.");
-        }
+    const isMakeValid = makeRegex.test(make);
+    const isModelValid = modelRegex.test(model);
+    const isLicensePlateValid = licensePlateRegex.test(licensePlate);
+
+    setFieldValidationStyle(makeInput, isMakeValid);
+    setFieldValidationStyle(modelInput, isModelValid);
+    setFieldValidationStyle(licensePlateInput, isLicensePlateValid);
+
+    if (!isMakeValid || !isModelValid || !isLicensePlateValid) {
+        alert("Пожалуйста, исправьте ошибки в форме перед добавлением автомобиля.");
+        return;
+    }
+
+    const response = await authorizedFetch(`${API_BASE}/add_car/`, {
+        method: "POST",
+        body: JSON.stringify({ make, model, license_plate: licensePlate }),
+    });
+
+    if (response) {
+        addCarForm.classList.add("hidden");
+        loadCars();
     } else {
-        alert("Введите марку, модель и номер автомобиля.");
+        alert("Ошибка добавления автомобиля.");
     }
 });
 
@@ -218,5 +259,69 @@ searchCarButton.addEventListener("click", () => {
         }
     }
 });
+
+function showEditCarForm(car) {
+    const editCarForm = document.getElementById("editCarForm");
+    const editCarMake = document.getElementById("editCarMake");
+    const editCarModel = document.getElementById("editCarModel");
+    const editCarLicensePlate = document.getElementById("editCarLicensePlate");
+
+    editCarMake.value = car.make;
+    editCarModel.value = car.model;
+    editCarLicensePlate.value = car.license_plate;
+
+    editCarForm.classList.remove("hidden");
+
+    editCarMake.addEventListener("input", (event) => {
+        const isValid = makeRegex.test(event.target.value.trim());
+        setFieldValidationStyle(event.target, isValid);
+    });
+
+    editCarModel.addEventListener("input", (event) => {
+        const isValid = modelRegex.test(event.target.value.trim());
+        setFieldValidationStyle(event.target, isValid);
+    });
+
+    editCarLicensePlate.addEventListener("input", (event) => {
+        const isValid = licensePlateRegex.test(event.target.value.trim());
+        setFieldValidationStyle(event.target, isValid);
+    });
+
+    document.getElementById("submitEditCar").addEventListener("click", async () => {
+        const updatedCar = {
+            make: editCarMake.value.trim(),
+            model: editCarModel.value.trim(),
+        };
+
+        const isMakeValid = makeRegex.test(updatedCar.make);
+        const isModelValid = modelRegex.test(updatedCar.model);
+
+        setFieldValidationStyle(editCarMake, isMakeValid);
+        setFieldValidationStyle(editCarModel, isModelValid);
+
+        if (!isMakeValid || !isModelValid) {
+            alert("Пожалуйста, исправьте ошибки перед сохранением.");
+            return;
+        }
+
+        const response = await authorizedFetch(`${API_BASE}/update_car/${car.license_plate}`, {
+            method: "PUT",
+            body: JSON.stringify(updatedCar),
+        });
+
+        if (response && response.ok) {
+            alert("Данные автомобиля успешно обновлены.");
+            editCarForm.classList.add("hidden");
+            loadCars();
+        } else {
+            alert("Ошибка при обновлении данных.");
+        }
+    });
+
+    // Отмена
+    document.getElementById("cancelEditCar").addEventListener("click", () => {
+        editCarForm.classList.add("hidden");
+    });
+}
 
 loadCars();

@@ -13,7 +13,6 @@
             <button id="searchRegButton">Найти</button>
         </div>
 
-        <button id="addRegButton">Добавить регистрацию</button>
         <div id="addRegForm" class="hidden">
             <input type="text" id="newRegLicensePlate" placeholder="Номер автомобиля">
             <input type="text" id="newOwnerName" placeholder="Имя владельца">
@@ -21,11 +20,21 @@
             <input type="number" id="newYearOfManufacture" placeholder="Год выпуска">
             <button id="submitAddReg">Добавить</button>
         </div>
-
+        <div id="editRegForm" class="hidden">
+            <h3>Редактировать регистрацию</h3>
+            <input type="text" id="editRegLicensePlate" placeholder="Номер автомобиля" readonly>
+            <input type="text" id="editOwnerName" placeholder="Имя владельца">
+            <input type="text" id="editOwnerAddress" placeholder="Адрес владельца">
+            <input type="number" id="editYearOfManufacture" placeholder="Год выпуска">
+            <div class="edit-buttons">
+                <button id="submitEditReg">Сохранить</button>
+                <button id="cancelEditReg">Отмена</button>
+            </div>
+        </div>
         <ul id="regList"></ul>
     </main>
 
     <script src="/static/js/header.js"></script>
-    <script src="/static/js/registration.js"></script>
+    <script src="/static/js/registration.js" defer></script>
 </body>
 </html>

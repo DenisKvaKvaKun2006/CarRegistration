@@ -4,7 +4,6 @@ body {
     padding: 0;
     background-color: #f8f9fa;
 }
-
 main {
     padding: 2rem;
     max-width: 900px;
@@ -13,13 +12,11 @@ main {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
 .search-container {
     display: flex;
     gap: 10px;
     margin-bottom: 1rem;
 }
-
 input[type="text"], input[type="number"] {
     padding: 0.5rem;
     flex: 1;
@@ -27,7 +24,6 @@ input[type="text"], input[type="number"] {
     border-radius: 4px;
     background-color: #e9ecef;
 }
-
 button {
     padding: 0.5rem 1rem;
     background-color: #007BFF;
@@ -39,65 +35,208 @@ button {
     transition: background-color 0.3s ease;
 }
 
+button.find-car {
+    background-color: #007BFF; /* Синий */
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+button.find-car:hover {
+    background-color: #0056b3; /* Темно-синий при наведении */
+}
+
 button:hover {
     background-color: #0056b3;
 }
-
-#addRegForm {
-    margin: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+button.add-reg,
+button.submit-reg,
+button.hide-reg {
+    background-color: #28a745;
 }
-
-#addRegForm.hidden {
-    display: none;
+button.add-reg:hover,
+button.submit-reg:hover,
+button.hide-reg:hover {
+    background-color: #218838;
 }
-
+button.delete {
+    background-color: #dc3545;
+}
+button.delete:hover {
+    background-color: #c82333;
+}
+button.expand {
+    background-color: #007BFF;
+    color: white;
+}
+button.expand:hover {
+    background-color: #0056b3;
+}
+.hidden {
+    display: none !important;
+}
 ul {
     list-style: none;
     padding: 0;
 }
-
 li {
     background-color: #f8f9fa;
     margin: 0.5rem 0;
     padding: 1rem;
     border: 1px solid #ced4da;
     border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
-li button {
-    margin-left: 10px;
-    background-color: #6c757d;
-}
-
-li button.expand {
-    background-color: #007BFF;
-}
-
-li button.green {
-    background-color: #28a745;
-}
-
-li button.delete {
-    background-color: #dc3545;
-}
-
-li button:hover {
-    opacity: 0.85;
-}
-
 .reg-details {
     padding: 0.5rem;
     background-color: #e9ecef;
     border-radius: 6px;
 }
-
 .reg-details.hidden {
     display: none;
+}
+.button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: start;
+    margin-top: 10px;
+}
+#addRegForm,
+#editRegForm {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#addRegForm.hidden,
+#editRegForm.hidden {
+    display: none;
+}
+#addRegForm input,
+#editRegForm input {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #e9ecef;
+}
+#addRegForm button,
+#editRegForm button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+#editRegForm button#submitEditReg {
+    background-color: #28a745;
+    color: white;
+}
+#editRegForm button#submitEditReg:hover {
+    background-color: #218838;
+}
+#editRegForm button#cancelEditReg {
+    background-color: #dc3545;
+    color: white;
+}
+#editRegForm button#cancelEditReg:hover {
+    background-color: #c82333;
+}
+.car-result {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+.car-result.hidden {
+    display: none;
+}
+.car-result .car-info {
+    font-size: 1rem;
+    color: #343a40;
+    line-height: 1.5;
+}
+.car-result .hide-car-result {
+    display: block;
+    margin-top: 10px;
+    padding: 0.5rem 1rem;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+.car-result .hide-car-result:hover {
+    background-color: #5a6268;
+}
+.no-results {
+    font-size: 1rem;
+    color: #dc3545;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#submitEditReg {
+    background-color: #28a745;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#submitEditReg:hover {
+    background-color: #218838;
+}
+
+#cancelEditReg {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#cancelEditReg:hover {
+    background-color: #c82333;
+}
+
+input {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.5rem;
+    transition: border-color 0.3s ease;
+}
+
+input[style*="border: 2px solid red"] {
+    border-color: red !important;
+}
+
+input[style*="border: 2px solid green"] {
+    border-color: green !important;
 }

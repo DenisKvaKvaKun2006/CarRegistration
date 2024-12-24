@@ -149,25 +149,35 @@ async function loadCars() {
                     const licensePlate = car.license_plate;
 
                     if (confirm("Удалить автомобиль? Обратите внимание: регистрация автомобиля также будет удалена!")) {
-                        // Удаление регистрации
-                        const deleteRegResponse = await authorizedFetch(`${API_REGS}/delete_registration/${licensePlate}`, {
-                            method: "DELETE"
+                        // Проверка наличия регистрации
+                        const regCheckResponse = await authorizedFetch(`${API_REGS}/search_registrations/?query=${licensePlate}`);
+                        if (regCheckResponse && regCheckResponse.ok) {
+                            const regData = await regCheckResponse.json();
+                            const registrations = regData.registrations;
+
+                            if (Array.isArray(registrations) && registrations.length > 0) {
+                                // Если регистрация существует, удаляем ее
+                                const deleteRegResponse = await authorizedFetch(`${API_REGS}/delete_registration/${licensePlate}`, {
+                                    method: "DELETE",
+                                });
+
+                                if (!deleteRegResponse || !deleteRegResponse.ok) {
+                                    alert("Ошибка при удалении регистрации.");
+                                    return;
+                                }
+                            }
+                        }
+
+                        // Удаление автомобиля
+                        const deleteCarResponse = await authorizedFetch(`${API_BASE}/delete_car/${licensePlate}`, {
+                            method: "DELETE",
                         });
 
-                        if (deleteRegResponse && deleteRegResponse.ok) {
-                            // Удаление автомобиля
-                            const deleteCarResponse = await authorizedFetch(`${API_BASE}/delete_car/${licensePlate}`, {
-                                method: "DELETE"
-                            });
-
-                            if (deleteCarResponse && deleteCarResponse.ok) {
-                                alert("Автомобиль и его регистрация успешно удалены.");
-                                loadCars();
-                            } else {
-                                alert("Ошибка при удалении автомобиля.");
-                            }
+                        if (deleteCarResponse && deleteCarResponse.ok) {
+                            alert("Автомобиль успешно удален.");
+                            loadCars(); // Обновляем список автомобилей
                         } else {
-                            alert("Ошибка при удалении регистрации.");
+                            alert("Ошибка при удалении автомобиля.");
                         }
                     }
                 });

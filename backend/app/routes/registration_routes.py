@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict, Any, List
+from typing import Dict, Any
 from models.registration import Registration
 from crud.registration_crud import (
     add_registration,

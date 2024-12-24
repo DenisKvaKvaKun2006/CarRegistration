@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Form
 from crud.auth_crud import register_user_crud, login_user_crud
 from models.user import UserCreate, UserLogin
 from security.jwt import decode_access_token
@@ -52,23 +52,29 @@ async def register_user(user: UserCreate) -> dict:
         500: {"description": "Unexpected error during login."},
     },
 )
-async def login_user(user: UserLogin) -> dict:
+async def login_user(
+        username: str = Form(..., description="User's email"),  # Используем Form для обработки form-data
+        password: str = Form(..., description="User's password"),
+        grant_type: str = Form(default="password", description="OAuth2 grant type, default is 'password'"),
+) -> dict:
     """
-    Аутентификация пользователя.
-
-    Возвращает JWT-токен в случае успешного входа.
+    Аутентификация пользователя с использованием OAuth2 формата (username вместо email).
 
     Args:
-        user (UserLogin): Данные пользователя для входа.
+        username (str): E-mail пользователя.
+        password (str): Пароль пользователя.
+        grant_type (str): Тип гранта для OAuth2 (по умолчанию "password").
 
     Returns:
-        dict: JWT-токен и его тип.
+        dict: Токен доступа в случае успешного входа.
 
     Raises:
         HTTPException: Если учетные данные некорректны или произошла другая ошибка.
     """
     try:
-        return await login_user_crud(user)
+        # Используем username как email
+        user_data = UserLogin(email=username, password=password)
+        return await login_user_crud(user_data)
     except ValueError as ve:
         raise HTTPException(status_code=401, detail=str(ve))
     except RuntimeError as re:
